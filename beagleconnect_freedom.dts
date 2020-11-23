@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2020 Erik Larson
+ * Copyright (c) 2020 Jason Kridner, BeagleBoard.org Foundation
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -19,38 +20,40 @@
 #define BTN_GPIO_FLAGS (GPIO_ACTIVE_LOW | GPIO_PULL_UP)
 
 / {
-    model = "Beagle Connect";
-    compatible = "beagleboard,beagle-connect";
+    model = "BeagleConnect Freedom";
+    compatible = "beagleboard,beagleconnect-freedom";
 
     aliases {
-        led0 = &red_led1;
-        led1 = &red_led2;
+        led0 = &led_subg;
+        led1 = &led_24g;
         sw0 = &user_button_0;
+        sensor0 = &light;
+        sensor1 = &accel;
     };
 
     chosen {
         zephyr,sram = &sram0;
         zephyr,flash = &flash0;
-        zephyr,console = &uart1;
-        zephyr,shell-uart = &uart1;
+        zephyr,console = &uart0;
+        zephyr,shell-uart = &uart0;
     };
 
     leds {
         compatible = "gpio-leds";
-        red_led1: led_0 {
+        led_subg: led_0 {
             gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-            label = "Red LED 1";
+            label = "SubG LED";
         };
-        red_led2: led_1 {
+        led_24g: led_1 {
             gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
-            label = "Red LED 2";
+            label = "2.4G LED";
         };
     };
 
     gpio_keys {
         compatible = "gpio-keys";
         user_button_0: button_0 {
-            label = "User button";
+            label = "User Button";
             gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
         };
     };
@@ -88,13 +91,13 @@
     scl-pin = <25>;
     sda-pin = <26>;
 
-    lis2dh12-accel@18 {
+    accel: lis2dh12-accel@18 {
         compatible = "st,lis2dh12", "st,lis2dh", "st,lis2de12";
         reg = <0x18>;
         label = "LIS2DE12-ACCEL";
     };
 
-    opt3001-light@44 {
+    light: opt3001-light@44 {
         compatible = "ti,opt3001";
         reg = <0x44>;
         label = "OPT3001-LIGHT";
@@ -117,7 +120,7 @@
     miso-pin = <11>;
     /* cs-pin = <8>; */
     cs-gpios = <&gpio0 8 GPIO_ACTIVE_LOW>;
-    gd25q16: gd25q16c@0 {
+    nor_flash: gd25q16c@0 {
         compatible = "jedec,spi-nor";
         label = "GD25Q16C";
         reg = <0>;
